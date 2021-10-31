@@ -7,15 +7,6 @@
 
 typedef enum
 {
-  TWI_MODE_NO_MODE,
-  TWI_MODE_MSTR_TX,
-  TWI_MODE_MSTR_RX,
-  TWI_MODE_SLAV_TX,
-  TWI_MODE_SLAV_RX
-} TWI_MODE;
-
-typedef enum
-{
   TWI_STATE_NOT_INIT  = 0,
   TWI_STATE_IDLE      = 1,
   TWI_STATE_BUSY      = 2,
@@ -34,8 +25,6 @@ typedef struct
   uint8_t   timeout;
   TWI_STATE state;
 
-  TWI_MODE  mode;
-  
   // Master Mode Callbacks
   TWI_MASTER_COMPLETE complete_callback;
   TWI_MASTER_NACK nack_callback;

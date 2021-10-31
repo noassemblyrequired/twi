@@ -18,7 +18,6 @@ volatile TWI_DATA data =
   .address    = 0,
   .timeout    = 0,
   .state      = TWI_STATE_NOT_INIT,
-  .mode       = TWI_MODE_NO_MODE,
 
   // Master Callback Defaults
   .complete_callback  = NULL,
@@ -224,7 +223,6 @@ ISR(TWI_vect)
     case TW_SR_GCALL_ACK:
     case TW_SR_ARB_LOST_GCALL_ACK:
       {
-        data.mode = TWI_MODE_SLAV_RX;
         uint8_t twcr = _BV(TWINT) | _BV(TWEN) | _BV(TWIE);
         // if the slave has provided a callback for SLA then call it, otherwise always ack
         TWI_ACTION action = data.sla_callback ? data.sla_callback(TWDR >> 1, data.tw_status) : TWI_ACTION_ACK;
@@ -272,7 +270,6 @@ ISR(TWI_vect)
     case TW_ST_ARB_LOST_SLA_ACK:
         if (data.sla_callback)
           data.sla_callback(TWDR >> 1, data.tw_status);
-        data.mode = TWI_MODE_SLAV_TX;
     case TW_ST_DATA_ACK:
       {
         uint8_t twdr;
@@ -362,7 +359,6 @@ TWI_STATUS _twi_master(uint8_t address, TWI_MASTER_RW* rw_data, uint8_t operatio
   if (data.state == TWI_STATE_NOT_INIT)
     return TWI_NOT_INIT;
 
-  data.mode = operation == TW_WRITE ? TWI_MODE_MSTR_TX : TWI_MODE_MSTR_RX;
   data.address = (address << 1) | operation;
   data.buffer = rw_data->data;
   data.buffer_sz = rw_data->data_sz;

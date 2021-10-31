@@ -1,0 +1,4 @@
+*.o
+libtwi.a
+.*.sw?
+doxygen
